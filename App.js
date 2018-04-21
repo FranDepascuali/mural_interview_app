@@ -6,85 +6,22 @@ import {
   PanResponder,
   Animated,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  ScrollView,
+  Dimensions
 } from "react-native";
 // import { SecondCounter } from "./src/canvas";
-import { SecondCounter, Counter, LotsOfGreetings } from "./src/canvas";
-
-class Panresponder_demo extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pan: new Animated.ValueXY(),
-      scale: new Animated.Value(1)
-    };
-  }
-
-  componentWillMount() {
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-
-      onPanResponderGrant: (e, gestureState) => {
-        // Set the initial value to the current state
-        this.state.pan.setOffset({
-          x: this.state.pan.x._value,
-          y: this.state.pan.y._value
-        });
-        this.state.pan.setValue({ x: 0, y: 0 });
-        Animated.spring(this.state.scale, {
-          toValue: 1.1,
-          friction: 3
-        }).start();
-      },
-
-      // When we drag/pan the object, set the delate to the states pan position
-      onPanResponderMove: Animated.event([
-        null,
-        { dx: this.state.pan.x, dy: this.state.pan.y }
-      ]),
-
-      onPanResponderRelease: (e, { vx, vy }) => {
-        // Flatten the offset to avoid erratic behavior
-        this.state.pan.flattenOffset();
-        Animated.spring(this.state.scale, { toValue: 1, friction: 3 }).start();
-      }
-    });
-  }
-
-  render() {
-    // Destructure the value of pan from the state
-    let { pan, scale } = this.state;
-
-    // Calculate the x and y transform from the pan value
-    let [translateX, translateY] = [pan.x, pan.y];
-
-    let rotate = "0deg";
-
-    // Calculate the transform property and set it as a value for our style which we add below to the Animated.View component
-    let imageStyle = {
-      transform: [{ translateX }, { translateY }, { rotate }, { scale }]
-    };
-
-    return (
-      // <View style={styles.container}>
-      <Animated.View style={imageStyle} {...this._panResponder.panHandlers}>
-        {/* <Image source={require("./assets/panresponder.png")} />
-           */}
-        <View style={{ width: 50, height: 50, backgroundColor: "red" }} />
-      </Animated.View>
-      // </View>
-    );
-  }
-}
+// import { SecondCounter, Counter, LotsOfGreetings } from "./src/canvas";
+import { Widget } from "./src/models/Widget";
+import { Canvas } from "./src/canvas";
+import { DoubleTouchListener } from "./src/DoubleTouchListener";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "blue"
+    backgroundColor: "green"
   },
   welcome: {
     fontSize: 20,
@@ -98,80 +35,105 @@ const styles = StyleSheet.create({
   }
 });
 
-// export default class App extends Component {
-//   render() {
-//     return (
-//       <View style={{ width: 9000, height: 6000, backgroundColor: "green" }}>
-//         <Panresponder_demo />
-//       </View>
-//     );
-//   }
-// }
-
 export default class App extends Component {
   constructor() {
     super();
-    // this.state = {  };
+
+    this.state = {
+      widgets: []
+    };
 
     this.animatedValue = new Animated.Value(0);
   }
 
   render() {
+    // return <Canvas />;
     return (
-      <View style={styles.container}>
-        <Panresponder_demo />
-        <Index />
-      </View>
-    );
-  }
-}
-
-class Widget {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-class Index extends Component {
-  constructor() {
-    super();
-    this.state = {
-      lastPressed: 0,
-      toDisplay: "only one time",
-      widgets: [new Widget(0, 0, 200, 200)]
-    };
-  }
-
-  onLastPress() {
-    var delta = new Date().getTime() - this.state.lastPressed;
-
-    var toDisplay = "only one time";
-
-    if (delta < 200) {
-      this.state.widgets.push(new Widget(0, 0, 200, 200));
-    }
-
-    this.setState({
-      lastPressed: new Date().getTime(),
-      toDisplay: toDisplay
-    });
-  }
-
-  render() {
-    return (
-      <View>
-        <TouchableHighlight onPress={() => this.onLastPress()}>
-          <Text>Double press me</Text>
-        </TouchableHighlight>
+      <View style={{ flex: 1, backgroundColor: "green" }}>
+        <DoubleTouchListener
+          onDoubleTouch={(x, y) =>
+            this.setState({
+              widgets: [...this.state.widgets, new Widget(x, y, 50, 50)]
+            })
+          }
+        />
         {this.state.widgets.map(widget => {
           return (
-            <View>
-              <Text>Helloooo</Text>
-            </View>
+            <View
+              style={{
+                position: "absolute",
+                top: widget.y,
+                left: widget.x,
+                width: widget.width,
+                height: widget.height,
+                backgroundColor: "red"
+              }}
+            />
           );
         })};
       </View>
     );
   }
 }
+
+// render() {
+//   return (
+//     <TouchableWithoutFeedback onPress={event => this.onLastPress(event)}>
+//       <View style={{ flex: 1, backgroundColor: "powderblue" }}>
+//         {this.state.widgets.map(widget => {
+//           return (
+//             <View
+//               style={{
+//                 position: "absolute",
+//                 top: widget.y,
+//                 left: widget.x,
+//                 width: widget.width,
+//                 height: widget.height,
+//                 backgroundColor: "red"
+//               }}
+//             />
+//           );
+//         })};
+//       </View>
+//     </TouchableWithoutFeedback>
+//     /*{ {this.state.widgets.map(widget => {
+//         return <Panresponder_demo style={{position: 'absolute', top: widget.y, left: widget.x, right: 0, bottom: 0}} />;
+//         // })}; }*/
+//   );
+// }
+
+// class DoubleTouchListener extends Component {
+//   constructor() {
+//     super();
+//     this.state = {
+//       lastPressed: 0,
+//       widgets: []
+//     };
+//   }
+
+//   onLastPress(event) {
+//     var delta = new Date().getTime() - this.state.lastPressed;
+
+//     let y = event.nativeEvent.locationY;
+//     let x = event.nativeEvent.locationX;
+
+//     console.log("x: " + x + " y: " + y);
+
+//     shouldAddWidget = delta < 200;
+
+//     widgets = this.state.widgets;
+
+//     if (shouldAddWidget) {
+//       widgets.push(new Widget(x, y, 200, 200));
+//     }
+
+//     this.setState({
+//       lastPressed: new Date().getTime(),
+//       widgets: widgets
+//     });
+//   }
+
+//   render() {
+//     return <Canvas />;
+//   }
+// }
