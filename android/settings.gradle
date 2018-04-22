@@ -1,0 +1,3 @@
+rootProject.name = 'mural_interview_app'
+
+include ':app'

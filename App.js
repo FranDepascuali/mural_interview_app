@@ -6,13 +6,13 @@ import {
   PanResponder,
   Animated,
   Image,
-  TouchableHighlight,
+  TouchableWithoutFeedback,
   ScrollView,
   Dimensions
 } from "react-native";
 // import { SecondCounter } from "./src/canvas";
 // import { SecondCounter, Counter, LotsOfGreetings } from "./src/canvas";
-import { Widget } from "./src/models/Widget";
+import { Widget, WidgetUI } from "./src/models/Widget";
 import { Canvas } from "./src/canvas";
 import { DoubleTouchListener } from "./src/DoubleTouchListener";
 
@@ -40,100 +40,34 @@ export default class App extends Component {
     super();
 
     this.state = {
-      widgets: []
+      widgets: [],
+      dragging: false
     };
 
     this.animatedValue = new Animated.Value(0);
   }
 
+  myCallback = dragging => {
+    this.setState({ widgets: this.state.widgets, dragging: dragging });
+  };
+
   render() {
-    // return <Canvas />;
     return (
-      <View style={{ flex: 1, backgroundColor: "green" }}>
+      <Canvas scrollingIsEnabled={!this.state.dragging}>
         <DoubleTouchListener
           onDoubleTouch={(x, y) =>
             this.setState({
               widgets: [...this.state.widgets, new Widget(x, y, 50, 50)]
             })
           }
-        />
-        {this.state.widgets.map(widget => {
-          return (
-            <View
-              style={{
-                position: "absolute",
-                top: widget.y,
-                left: widget.x,
-                width: widget.width,
-                height: widget.height,
-                backgroundColor: "red"
-              }}
-            />
-          );
-        })};
-      </View>
+        >
+          {this.state.widgets.map(widget => {
+            return (
+              <WidgetUI widget={widget} callbackFromParent={this.myCallback} />
+            );
+          })};
+        </DoubleTouchListener>
+      </Canvas>
     );
   }
 }
-
-// render() {
-//   return (
-//     <TouchableWithoutFeedback onPress={event => this.onLastPress(event)}>
-//       <View style={{ flex: 1, backgroundColor: "powderblue" }}>
-//         {this.state.widgets.map(widget => {
-//           return (
-//             <View
-//               style={{
-//                 position: "absolute",
-//                 top: widget.y,
-//                 left: widget.x,
-//                 width: widget.width,
-//                 height: widget.height,
-//                 backgroundColor: "red"
-//               }}
-//             />
-//           );
-//         })};
-//       </View>
-//     </TouchableWithoutFeedback>
-//     /*{ {this.state.widgets.map(widget => {
-//         return <Panresponder_demo style={{position: 'absolute', top: widget.y, left: widget.x, right: 0, bottom: 0}} />;
-//         // })}; }*/
-//   );
-// }
-
-// class DoubleTouchListener extends Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       lastPressed: 0,
-//       widgets: []
-//     };
-//   }
-
-//   onLastPress(event) {
-//     var delta = new Date().getTime() - this.state.lastPressed;
-
-//     let y = event.nativeEvent.locationY;
-//     let x = event.nativeEvent.locationX;
-
-//     console.log("x: " + x + " y: " + y);
-
-//     shouldAddWidget = delta < 200;
-
-//     widgets = this.state.widgets;
-
-//     if (shouldAddWidget) {
-//       widgets.push(new Widget(x, y, 200, 200));
-//     }
-
-//     this.setState({
-//       lastPressed: new Date().getTime(),
-//       widgets: widgets
-//     });
-//   }
-
-//   render() {
-//     return <Canvas />;
-//   }
-// }

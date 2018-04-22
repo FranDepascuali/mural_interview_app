@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TouchableWithoutFeedback, View } from "react-native";
+import { TouchableWithoutFeedback, View, Text } from "react-native";
 
 export class DoubleTouchListener extends Component {
   constructor() {
@@ -32,7 +32,9 @@ export class DoubleTouchListener extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={event => this.onLastPress(event)}>
-        <View style={{ flex: 1, backgroundColor: "green" }} />
+        <View style={{ flex: 1, backgroundColor: "green" }}>
+          {this.props.children}
+        </View>
       </TouchableWithoutFeedback>
     );
   }

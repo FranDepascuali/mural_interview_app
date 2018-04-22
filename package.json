@@ -29,6 +29,8 @@
     "eslint": "^4.19.1",
     "expo": "^26.0.0",
     "react": "16.3.0-alpha.1",
-    "react-native": "0.54.0"
+    "react-native": "0.54.0",
+    "react-native-tooltip": "^5.2.0",
+    "react-native-tooltip-menu": "^1.1.1"
   }
 }

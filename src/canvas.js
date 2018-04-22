@@ -1,24 +1,28 @@
 import React, { Component } from "react";
 import { AppRegistry, View, ScrollView, Text } from "react-native";
+import { WidgetUI } from "./models/Widget";
 
 export class Canvas extends Component {
   render() {
     return (
       <View>
         <ScrollView
-          contentContainerStyle={{ height: 1000, backgroundColor: "red" }}
+          directionalLockEnabled={false}
+          horizontal={true}
+          scrollEnabled={this.props.scrollingIsEnabled}
+          maximumZoomScale={2}
+          minimumZoomScale={1}
+          contentContainerStyle={{
+            height: 2000,
+            width: 3000,
+            backgroundColor: "blue"
+          }}
         >
-          <ScrollView
-            horizontal
-            minimumZoomScale={1}
-            maximumZoomScale={2}
-            contentContainerStyle={{ width: 1000, backgroundColor: "blue" }}
-          >
-            <Text style={{ fontSize: 96 }}>Scroll me plz</Text>
-            <Text style={{ fontSize: 96 }}>If you like</Text>
-          </ScrollView>
-        </ScrollView>;
+          {this.props.children}
+        </ScrollView>
       </View>
     );
   }
 }
+
+// https://codedaily.io/tutorials/21/Pan-Responder-Inside-of-a-ScrollView

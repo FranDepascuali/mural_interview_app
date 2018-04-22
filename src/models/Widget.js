@@ -1,4 +1,12 @@
-import { Component } from "react";
+import React, { Component } from "react";
+import {
+  Animated,
+  PanResponder,
+  View,
+  StyleSheet,
+  Text,
+  Image
+} from "react-native";
 
 export class Widget {
   x: number;
@@ -15,71 +23,83 @@ export class Widget {
 }
 
 export class WidgetUI extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pan: new Animated.ValueXY(),
-      scale: new Animated.Value(1)
-    };
-  }
-
   componentWillMount() {
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-
+    this.animatedValue = new Animated.ValueXY({
+      x: this.props.widget.x,
+      y: this.props.widget.y
+    });
+    this._value = { x: this.props.widget.x, y: this.props.widget.y };
+    console.log(
+      "Widget being instantiated with x:" +
+        this._value.x +
+        " y:" +
+        this._value.y
+    );
+    this.animatedValue.addListener(value => (this._value = value));
+    this.panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onPanResponderGrant: (e, gestureState) => {
-        // Set the initial value to the current state
-        this.state.pan.setOffset({
-          x: this.state.pan.x._value,
-          y: this.state.pan.y._value
+        this.props.callbackFromParent(true);
+        this.animatedValue.setOffset({
+          x: this._value.x,
+          y: this._value.y
         });
-        this.state.pan.setValue({ x: 0, y: 0 });
-        Animated.spring(this.state.scale, {
-          toValue: 1.1,
-          friction: 3
-        }).start();
+        this.animatedValue.setValue({ x: 0, y: 0 });
       },
-
-      // When we drag/pan the object, set the delate to the states pan position
       onPanResponderMove: Animated.event([
         null,
-        { dx: this.state.pan.x, dy: this.state.pan.y }
+        { dx: this.animatedValue.x, dy: this.animatedValue.y }
       ]),
-
-      onPanResponderRelease: (e, { vx, vy }) => {
-        // Flatten the offset to avoid erratic behavior
-        this.state.pan.flattenOffset();
-        Animated.spring(this.state.scale, { toValue: 1, friction: 3 }).start();
+      onPanResponderRelease: (e, gestureState) => {
+        this.props.callbackFromParent(false);
+        this.animatedValue.flattenOffset();
+        Animated.decay(this.animatedValue, {
+          deceleration: 0.997,
+          velocity: { x: gestureState.vx, y: gestureState.vy }
+        }).start();
       }
     });
   }
 
   render() {
-    // Destructure the value of pan from the state
-    let { pan, scale } = this.state;
-
-    // Calculate the x and y transform from the pan value
-    let [translateX, translateY] = [pan.x, pan.y];
-
-    let rotate = "0deg";
-
-    // Calculate the transform property and set it as a value for our style which we add below to the Animated.View component
-    let imageStyle = {
-      transform: [{ translateX }, { translateY }, { rotate }, { scale }]
-    };
-
     return (
-      // <View style={styles.container}>
-      <Animated.View style={imageStyle} {...this._panResponder.panHandlers}>
-        {/* <Image source={require("./assets/panresponder.png")} />
-           */}
-        <View style={{ width: 50, height: 50, backgroundColor: "red" }} />
+      <Animated.View
+        style={{
+          transform: this.animatedValue.getTranslateTransform(),
+          width: this.props.widget.width,
+          height: this.props.widget.height
+        }}
+        {...this.panResponder.panHandlers}
+      >
+        <Image
+          style={{
+            width: this.props.widget.width,
+            height: this.props.widget.height
+          }}
+          source={{
+            uri:
+              "http://lorempixel.com/" +
+              this.props.widget.width +
+              "/" +
+              this.props.widget.height
+          }}
+        />
       </Animated.View>
-      // </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  box: {
+    width: 150,
+    height: 150,
+    backgroundColor: "#333"
+  },
+  text: {
+    color: "#FFF",
+    fontSize: 20
+  }
+});
 
 // https://blog.callstack.io/react-native-animations-revisited-part-iii-41ed43d1ce2e
