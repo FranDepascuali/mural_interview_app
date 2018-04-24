@@ -9,12 +9,13 @@ export default class Canvas extends Component {
         <ScrollView
           directionalLockEnabled={false}
           horizontal={true}
-          scrollEnabled={this.props.scrollingIsEnabled}
+          bounces={false}
+          scrollEnabled={this.props.scrollEnabled}
           maximumZoomScale={2}
           minimumZoomScale={1}
           contentContainerStyle={{
-            height: 2000,
-            width: 3000,
+            height: this.props.height,
+            width: this.props.width,
             backgroundColor: "blue"
           }}
         >

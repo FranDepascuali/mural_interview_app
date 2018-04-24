@@ -3,6 +3,7 @@ export default class Widget {
   y: number;
   width: number;
   height: number;
+  // NOTE: imageURL should be in a different class (ImageWidget) that contains a Widget, but as this is a simple demo I just put it here.
   imageURL: String;
 
   constructor(
