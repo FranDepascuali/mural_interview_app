@@ -1,22 +1,10 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  PanResponder,
-  Animated,
-  Image,
-  TouchableWithoutFeedback,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity
-} from "react-native";
-import { Widget } from "./src/models/Widget";
-import { Canvas } from "./src/canvas";
-import { DoubleTouchListener } from "./src/DoubleTouchListener";
-import { Draggable, WidgetUI, ImageWidget, Selectable } from "./src/Draggable";
-
 import PopoverTooltip from "react-native-popover-tooltip";
+
+import Canvas from "./src/Canvas/Canvas";
+import ImageWidgetView from "./src/Canvas/Widgets/ImageWidgetView";
+import DoubleTouchListener from "./src/Utils/DoubleTouchListener";
+import Widget from "./src/Models/Widget";
 
 export default class App extends Component {
   constructor() {
@@ -26,8 +14,6 @@ export default class App extends Component {
       widgets: [],
       draggingWidget: false
     };
-
-    this.animatedValue = new Animated.Value(0);
   }
 
   onDragging = () => {
@@ -65,7 +51,7 @@ export default class App extends Component {
         <DoubleTouchListener onDoubleTouch={this.createWidget}>
           {this.state.widgets.map(widget => {
             return (
-              <ImageWidget
+              <ImageWidgetView
                 widget={widget}
                 onDragging={this.onDragging}
                 onRelease={this.onRelease}

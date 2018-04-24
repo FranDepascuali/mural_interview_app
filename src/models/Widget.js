@@ -1,4 +1,4 @@
-export class Widget {
+export default class Widget {
   x: number;
   y: number;
   width: number;

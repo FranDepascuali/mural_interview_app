@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import { AppRegistry, View, ScrollView, Text } from "react-native";
-import { WidgetUI } from "./models/Widget";
+import { View, ScrollView } from "react-native";
 
-export class Canvas extends Component {
+// https://codedaily.io/tutorials/21/Pan-Responder-Inside-of-a-ScrollView
+export default class Canvas extends Component {
   render() {
     return (
       <View>
         <ScrollView
           directionalLockEnabled={false}
           horizontal={true}
-          scrollEnabled={false}
+          scrollEnabled={this.props.scrollingIsEnabled}
           maximumZoomScale={2}
           minimumZoomScale={1}
           contentContainerStyle={{
@@ -24,5 +24,3 @@ export class Canvas extends Component {
     );
   }
 }
-
-// https://codedaily.io/tutorials/21/Pan-Responder-Inside-of-a-ScrollView

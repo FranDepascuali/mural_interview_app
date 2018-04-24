@@ -1,84 +1,8 @@
 import React, { Component } from "react";
-import {
-  Animated,
-  PanResponder,
-  View,
-  StyleSheet,
-  Text,
-  Image
-} from "react-native";
-import { RandomImageWithDefault } from "./ImageWithDefault";
+import { Animated, PanResponder, View } from "react-native";
 
 // https://blog.callstack.io/react-native-animations-revisited-part-iii-41ed43d1ce2e
-
-import PopoverTooltip from "react-native-popover-tooltip";
-
-export class ImageWidget extends Component {
-  render() {
-    return (
-      <WidgetUI {...this.props}>
-        <RandomImageWithDefault
-          width={this.props.widget.width}
-          height={this.props.widget.height}
-          uri={this.props.widget.imageURL}
-        />
-      </WidgetUI>
-    );
-  }
-}
-
-export class WidgetUI extends Component {
-  render() {
-    return (
-      <Draggable
-        origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-        width={this.props.widget.width}
-        height={this.props.widget.height}
-        onDragging={this.props.onDragging}
-        onRelease={this.props.onRelease}
-        draggingEnabled={true}
-      >
-        <Selectable
-          width={this.props.widget.width}
-          height={this.props.widget.height}
-          origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-          onDeletePressed={() => this.props.onWidgetDeleted(this.props.widget)}
-        >
-          {this.props.children}
-        </Selectable>
-      </Draggable>
-    );
-  }
-}
-
-export class Selectable extends Component {
-  render() {
-    return (
-      <PopoverTooltip
-        ref="tooltip1"
-        buttonComponent={this.props.children}
-        items={[
-          {
-            label: "Delete",
-            onPress: () => {
-              this.props.onDeletePressed();
-            }
-          }
-        ]}
-      />
-    );
-  }
-}
-
-function printObject(o) {
-  var out = "";
-  for (var p in o) {
-    out += "\n" + ":: " + p + "(" + typeof o[p] + ") ::" + "\n" + o[p] + "\n";
-  }
-  console.log(out);
-}
-
-export class Draggable extends Component {
+export default class Draggable extends Component {
   _handleStartShouldSetPanResponder(e, gestureState) {
     console.log("_handleStartShouldSetPanResponder");
     return false;
@@ -86,11 +10,10 @@ export class Draggable extends Component {
 
   _handleMoveShouldSetPanResponder(e, gestureState) {
     return (
-      this.props.draggingEnabled &&
-      (Math.abs(gestureState.dx) > 0 ||
-        Math.abs(gestureState.dy) > 0 ||
-        Math.abs(gestureState.vx) > 0 ||
-        Math.abs(gestureState.vy) > 0)
+      Math.abs(gestureState.dx) > 0 ||
+      Math.abs(gestureState.dy) > 0 ||
+      Math.abs(gestureState.vx) > 0 ||
+      Math.abs(gestureState.vy) > 0
     );
   }
 
