@@ -40,7 +40,22 @@ export default class App extends Component {
 
   createWidget = (x, y) => {
     this.setState({
-      widgets: [...this.state.widgets, new Widget(x, y, 50, 50)]
+      widgets: [
+        ...this.state.widgets,
+        new Widget(x, y, 50, 50, this.randomImageURI(50, 50))
+      ]
+    });
+  };
+
+  randomImageURI = (width, height) => {
+    return "http://lorempixel.com/" + width + "/" + height;
+  };
+
+  deleteWidget = widgetToDelete => {
+    const index = this.state.widgets.indexOf(widgetToDelete);
+    console.log("Index: " + index);
+    this.setState({
+      widgets: this.state.widgets.filter(widget => widget != widgetToDelete)
     });
   };
 
@@ -54,6 +69,7 @@ export default class App extends Component {
                 widget={widget}
                 onDragging={this.onDragging}
                 onRelease={this.onRelease}
+                onWidgetDeleted={this.deleteWidget}
               />
             );
           })};
@@ -62,50 +78,3 @@ export default class App extends Component {
     );
   }
 }
-
-// export default class App extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       order: 1
-//     };
-//   }
-//   render() {
-//     return (
-//       <View
-//         style={{
-//           flex: 1,
-//           alignSelf: "stretch",
-//           alignItems: "center",
-//           justifyContent: "flex-start",
-//           backgroundColor: "#fff"
-//         }}
-//       >
-//         <PopoverTooltip
-//           ref="tooltip1"
-//           buttonComponent={
-//             <Image
-//               style={{
-//                 width: 50,
-//                 height: 50
-//               }}
-//               source={{
-//                 uri: "http://lorempixel.com/" + 50 + "/" + 50
-//               }}
-//             />
-//           }
-//           items={[
-//             {
-//               label: "Item 1",
-//               onPress: () => {}
-//             },
-//             {
-//               label: "Item 2",
-//               onPress: () => {}
-//             }
-//           ]}
-//         />
-//       </View>
-//     );
-//   }
-// }

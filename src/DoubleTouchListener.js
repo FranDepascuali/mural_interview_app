@@ -20,7 +20,7 @@ export class DoubleTouchListener extends Component {
     doubleTouchDetected = delta < 200;
 
     if (doubleTouchDetected) {
-      console.log("Double touch");
+      console.log("Double touch x: " + x + "y: " + y);
       this.props.onDoubleTouch(x, y);
     }
 
@@ -32,7 +32,7 @@ export class DoubleTouchListener extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={event => this.onLastPress(event)}>
-        <View style={{ flex: 1, backgroundColor: "green" }}>
+        <View style={{ width: 2000, height: 3000, backgroundColor: "green" }}>
           {this.props.children}
         </View>
       </TouchableWithoutFeedback>

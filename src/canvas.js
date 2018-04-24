@@ -9,7 +9,6 @@ export class Canvas extends Component {
         <ScrollView
           directionalLockEnabled={false}
           horizontal={true}
-          // scrollEnabled={this.props.scrollingIsEnabled}
           scrollEnabled={false}
           maximumZoomScale={2}
           minimumZoomScale={1}

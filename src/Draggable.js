@@ -7,57 +7,27 @@ import {
   Text,
   Image
 } from "react-native";
+import { RandomImageWithDefault } from "./ImageWithDefault";
 
 // https://blog.callstack.io/react-native-animations-revisited-part-iii-41ed43d1ce2e
 
 import PopoverTooltip from "react-native-popover-tooltip";
 
 export class ImageWidget extends Component {
-  //   render() {
-  //     return (
-  //       <Selectable
-  //         width={this.props.widget.width}
-  //         height={this.props.widget.height}
-  //         origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-  //       >
-  //         <WidgetUI {...this.props} />
-  //         {/* <Image
-  //             style={{
-  //               width: this.props.widget.width,
-  //               height: this.props.widget.height
-  //             }}
-  //             source={{
-  //               uri: "http://lorempixel.com/" + 50 + "/" + 50
-  //             }}
-  //           /> */}
-  //       </Selectable>
-  //     );
-  //   }
-  //   render() {
-  //     return (
-  //       <Draggable
-  //         origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-  //         width={this.props.widget.width}
-  //         height={this.props.widget.height}
-  //         onDragging={this.props.onDragging}
-  //         onRelease={this.props.onRelease}
-  //       >
-  //         <Selectable
-  //           width={this.props.widget.width}
-  //           height={this.props.widget.height}
-  //           origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-  //         >
-  //           <View
-  //             style={{
-  //               width: this.props.widget.width,
-  //               height: this.props.widget.height,
-  //               backgroundColor: "red"
-  //             }}
-  //           />
-  //         </Selectable>
-  //       </Draggable>
-  //     );
-  //   }
+  render() {
+    return (
+      <WidgetUI {...this.props}>
+        <RandomImageWithDefault
+          width={this.props.widget.width}
+          height={this.props.widget.height}
+          uri={this.props.widget.imageURL}
+        />
+      </WidgetUI>
+    );
+  }
+}
+
+export class WidgetUI extends Component {
   render() {
     return (
       <Draggable
@@ -72,55 +42,11 @@ export class ImageWidget extends Component {
           width={this.props.widget.width}
           height={this.props.widget.height}
           origin={{ x: this.props.widget.x, y: this.props.widget.y }}
+          onDeletePressed={() => this.props.onWidgetDeleted(this.props.widget)}
         >
-          <View
-            style={{
-              width: this.props.widget.width,
-              height: this.props.widget.height,
-              backgroundColor: "blue"
-            }}
-          />
+          {this.props.children}
         </Selectable>
       </Draggable>
-    );
-  }
-  //   render() {
-  //     return (
-  //       <Selectable
-  //         width={this.props.widget.width}
-  //         height={this.props.widget.height}
-  //         origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-  //       >
-  //         <Draggable
-  //           origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-  //           width={this.props.widget.width}
-  //           height={this.props.widget.height}
-  //           onDragging={this.props.onDragging}
-  //           onRelease={this.props.onRelease}
-  //         >
-  //           {/* <View
-  //             style={{
-  //               width: this.props.widget.width,
-  //               height: this.props.widget.height,
-  //               backgroundColor: "blue"
-  //             }}
-  //           /> */}
-  //         </Draggable>
-  //       </Selectable>
-  //     );
-  //   }
-}
-
-export class WidgetUI extends Component {
-  render() {
-    return (
-      <Draggable
-        origin={{ x: this.props.widget.x, y: this.props.widget.y }}
-        width={this.props.widget.width}
-        height={this.props.widget.height}
-        onDragging={this.props.onDragging}
-        onRelease={this.props.onRelease}
-      />
     );
   }
 }
@@ -134,7 +60,9 @@ export class Selectable extends Component {
         items={[
           {
             label: "Delete",
-            onPress: () => {}
+            onPress: () => {
+              this.props.onDeletePressed();
+            }
           }
         ]}
       />
@@ -157,16 +85,6 @@ export class Draggable extends Component {
   }
 
   _handleMoveShouldSetPanResponder(e, gestureState) {
-    // console.log(
-    //   "_handleMoveShouldSetPanResponder dx:" +
-    //     gestureState.dx +
-    //     "gesture: " +
-    //     gestureState +
-    //     "event: " +
-    //     e
-    // );
-    // printObject(gestureState);
-
     return (
       this.props.draggingEnabled &&
       (Math.abs(gestureState.dx) > 0 ||
@@ -174,19 +92,7 @@ export class Draggable extends Component {
         Math.abs(gestureState.vx) > 0 ||
         Math.abs(gestureState.vy) > 0)
     );
-    // printObject(e.nativeEvent);
-
-    // return Math.abs(gestureState.dx) > 5;
-    // return gestureState.numberActiveTouches > 1;
-    // return true;
   }
-
-  //   _handlePanResponderMove(event, gestureState) {
-  //     Animated.event([
-  //       null,
-  //       { dx: this.animatedValue.x, dy: this.animatedValue.y }
-  //     ]);
-  //   }
 
   _handlePanResponderMove = (event, gestureState) => {
     Animated.event([
@@ -246,24 +152,12 @@ export class Draggable extends Component {
         style={{
           transform: this.animatedValue.getTranslateTransform(),
           width: this.props.width,
-          height: this.props.height
+          height: this.props.height,
+          position: "absolute"
         }}
         {...this.panResponder.panHandlers}
       >
         {this.props.children}
-        {/* <Image
-          style={{
-            width: this.props.width,
-            height: this.props.height
-          }}
-          source={{
-            uri:
-              "http://lorempixel.com/" +
-              this.props.width +
-              "/" +
-              this.props.height
-          }}
-        /> */}
       </Animated.View>
     );
   }
