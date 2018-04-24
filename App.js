@@ -8,32 +8,15 @@ import {
   Image,
   TouchableWithoutFeedback,
   ScrollView,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from "react-native";
-// import { SecondCounter } from "./src/canvas";
-// import { SecondCounter, Counter, LotsOfGreetings } from "./src/canvas";
-import { Widget, WidgetUI } from "./src/models/Widget";
+import { Widget } from "./src/models/Widget";
 import { Canvas } from "./src/canvas";
 import { DoubleTouchListener } from "./src/DoubleTouchListener";
+import { Draggable, WidgetUI, ImageWidget, Selectable } from "./src/Draggable";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "green"
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  },
-  instructions: {
-    textAlign: "center",
-    color: "black",
-    marginBottom: 5
-  }
-});
+import PopoverTooltip from "react-native-popover-tooltip";
 
 export default class App extends Component {
   constructor() {
@@ -41,29 +24,37 @@ export default class App extends Component {
 
     this.state = {
       widgets: [],
-      dragging: false
+      draggingWidget: false
     };
 
     this.animatedValue = new Animated.Value(0);
   }
 
-  myCallback = dragging => {
-    this.setState({ widgets: this.state.widgets, dragging: dragging });
+  onDragging = () => {
+    this.setState({ widgets: this.state.widgets, draggingWidget: true });
+  };
+
+  onRelease = () => {
+    this.setState({ widgets: this.state.widgets, draggingWidget: false });
+  };
+
+  createWidget = (x, y) => {
+    this.setState({
+      widgets: [...this.state.widgets, new Widget(x, y, 50, 50)]
+    });
   };
 
   render() {
     return (
-      <Canvas scrollingIsEnabled={!this.state.dragging}>
-        <DoubleTouchListener
-          onDoubleTouch={(x, y) =>
-            this.setState({
-              widgets: [...this.state.widgets, new Widget(x, y, 50, 50)]
-            })
-          }
-        >
+      <Canvas scrollingIsEnabled={!this.state.draggingWidget}>
+        <DoubleTouchListener onDoubleTouch={this.createWidget}>
           {this.state.widgets.map(widget => {
             return (
-              <WidgetUI widget={widget} callbackFromParent={this.myCallback} />
+              <ImageWidget
+                widget={widget}
+                onDragging={this.onDragging}
+                onRelease={this.onRelease}
+              />
             );
           })};
         </DoubleTouchListener>
@@ -71,3 +62,50 @@ export default class App extends Component {
     );
   }
 }
+
+// export default class App extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       order: 1
+//     };
+//   }
+//   render() {
+//     return (
+//       <View
+//         style={{
+//           flex: 1,
+//           alignSelf: "stretch",
+//           alignItems: "center",
+//           justifyContent: "flex-start",
+//           backgroundColor: "#fff"
+//         }}
+//       >
+//         <PopoverTooltip
+//           ref="tooltip1"
+//           buttonComponent={
+//             <Image
+//               style={{
+//                 width: 50,
+//                 height: 50
+//               }}
+//               source={{
+//                 uri: "http://lorempixel.com/" + 50 + "/" + 50
+//               }}
+//             />
+//           }
+//           items={[
+//             {
+//               label: "Item 1",
+//               onPress: () => {}
+//             },
+//             {
+//               label: "Item 2",
+//               onPress: () => {}
+//             }
+//           ]}
+//         />
+//       </View>
+//     );
+//   }
+// }
