@@ -7,7 +7,7 @@ Coding challenge made for mural and at the same time my first steps with React N
 ## Table of Contents
   * [Installation](#installation)
   * [Usage](#usage)
-  * [Requirements & Implementation](#Requirements & Implementation)
+  * [Requirements & Implementation](#requirements--implementation)
   * [Pain points](#Pain points)
 
 ## Installation
