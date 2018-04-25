@@ -5,12 +5,10 @@
 Coding challenge made for mural and at the same time my first steps with React Native.
 
 ## Table of Contents
-  * [Usage](#usage)
   * [Installation](#installation)
-  * [Motivation](#motivation)
-  * [Search](#search)
-  * [Output](#output)
-  * [Testing](#testing)
+  * [Usage](#usage)
+  * [Requirements & Implementation](#Requirements & Implementation)
+  * [Pain points](#Pain points)
 
 ## Installation
 ```sh
