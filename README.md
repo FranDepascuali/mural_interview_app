@@ -17,6 +17,9 @@ cd mural_interview_app
 npm install
 ```
 
+## Demo
+![screencast_ios_2](https://user-images.githubusercontent.com/12101394/39267145-5d42faae-48a2-11e8-9240-d9c0cf2719c5.gif)
+
 ## Usage
 **iOS simulator**:
 ```sh
@@ -50,7 +53,6 @@ This was the first time I tried React Native. The first approaches were (as usua
     In the native side, we have the gestures recognizer: https://developer.apple.com/documentation/uikit/uigesturerecognizer. This makes it simpler to implement gesture handling in native side.
 
 2. The `<Image>` component of the `<ImageWidget>` supplied to the tooltip library instantiates a new image every time, so it produces a bug that when the popover is shown, the image is queried again. In this particular case, as the image is downloaded from lorempixel, a new different image is downloaded. This was not fixed as it would require to download the image via other way and cache it on the device, which is a difficult thing in react native (for example: https://stackoverflow.com/questions/44506733/react-native-lrucache-does-it-cache-images-from-image-urls). 
-
 
 ## Redux
 Redux could be used, but I didn't choose to use it here yet, simply because of a matter of time (getting into RN and making this project took one week, with a surgery I had to take in the middle).
