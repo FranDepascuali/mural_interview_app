@@ -8,7 +8,7 @@ Coding challenge made for mural and at the same time my first steps with React N
   * [Installation](#installation)
   * [Usage](#usage)
   * [Requirements & Implementation](#requirements--implementation)
-  * [Pain points](#Pain points)
+  * [Pain points](#pain-points)
 
 ## Installation
 ```sh
