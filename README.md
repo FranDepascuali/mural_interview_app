@@ -12,13 +12,22 @@ Coding challenge made for mural and at the same time my first steps with React N
   * [Output](#output)
   * [Testing](#testing)
 
-## Usage
-
-
 ## Installation
 ```sh
-TODO
+git clone https://github.com/FranDepascuali/mural_interview_app.git
+cd mural_interview_app
+npm install
 ```
+
+## Usage
+**iOS simulator**:
+```sh
+npm start
+i (to open iOS device)
+```
+
+**iOS device**:
+Follow instructions on https://expo.io/
 
 ## Requirements & Implementation
 
