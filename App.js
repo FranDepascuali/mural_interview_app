@@ -6,7 +6,7 @@ import ImageWidgetView from "./src/Canvas/Widgets/ImageWidgetView";
 import DoubleTouchListener from "./src/Utils/DoubleTouchListener";
 import Widget from "./src/Models/Widget";
 
-let DEFAULT_IMAGE_SIZE = { width: 200, height: 200 };
+let DEFAULT_IMAGE_SIZE = { width: 50, height: 50 };
 let CANVAS_SIZE = { width: 3000, height: 2000 };
 
 export default class App extends Component {
